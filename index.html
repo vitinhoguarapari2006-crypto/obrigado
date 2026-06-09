@@ -24,15 +24,33 @@ src="https://www.facebook.com/tr?id=980977731584223&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 
-<!-- Dispara aviso de lead novo pro N8N (grupo WhatsApp) -->
+<!-- Aviso de lead novo pro N8N — BLINDADO contra disparos falsos -->
 <script>
   // >>> COLE AQUI a Production URL do webhook do seu fluxo N8N <<<
   var N8N_WEBHOOK_URL = "https://n8n.xn--fluxaiautomao-7eb3d.com.br/webhook/lead-dashboard";
 
+  // Senha que SÓ o Inlead vai colocar na URL de redirecionamento.
+  // No Inlead, redirecione para:  .../obrigado.html?gl=ok123  (ou outro token seu)
+  var TOKEN_VALIDO = "ok123";
+
   document.addEventListener("DOMContentLoaded", function () {
     try {
-      // captura parâmetros da URL, caso o Inlead repasse nome/telefone na query string
       var p = new URLSearchParams(window.location.search);
+
+      // TRAVA 1 — só dispara se a URL trouxer o token correto (veio do quiz)
+      if (p.get("gl") !== TOKEN_VALIDO) return;
+
+      // TRAVA 2 — não dispara 2x na mesma sessão (reload/prefetch)
+      if (sessionStorage.getItem("gl_lead_enviado") === "1") return;
+      sessionStorage.setItem("gl_lead_enviado", "1");
+
+      // TRAVA 3 — ignora bots/crawlers conhecidos (Facebook, WhatsApp, etc.)
+      var ua = (navigator.userAgent || "").toLowerCase();
+      var bots = ["facebookexternalhit", "facebot", "whatsapp", "bot", "crawler", "spider", "preview"];
+      for (var i = 0; i < bots.length; i++) {
+        if (ua.indexOf(bots[i]) !== -1) return;
+      }
+
       var payload = {
         evento: "novo_lead",
         nome: p.get("nome") || p.get("name") || "",
@@ -43,7 +61,6 @@ src="https://www.facebook.com/tr?id=980977731584223&ev=PageView&noscript=1"
         timestamp: new Date().toISOString()
       };
 
-      // fire-and-forget: não trava a página se o webhook demorar
       fetch(N8N_WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
