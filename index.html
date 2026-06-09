@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Obrigado — Gestão Lucrativa</title>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '980977731584223');
+fbq('track', 'PageView');
+fbq('track', 'Lead');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=980977731584223&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
+<!-- Dispara aviso de lead novo pro N8N (grupo WhatsApp) -->
+<script>
+  // >>> COLE AQUI a Production URL do webhook do seu fluxo N8N <<<
+  var N8N_WEBHOOK_URL = "https://n8n.xn--fluxaiautomao-7eb3d.com.br/webhook/lead-dashboard";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    try {
+      // captura parâmetros da URL, caso o Inlead repasse nome/telefone na query string
+      var p = new URLSearchParams(window.location.search);
+      var payload = {
+        evento: "novo_lead",
+        nome: p.get("nome") || p.get("name") || "",
+        telefone: p.get("telefone") || p.get("phone") || "",
+        cidade: p.get("cidade") || p.get("city") || "",
+        origem: "Página de Obrigado - Inlead",
+        url: window.location.href,
+        timestamp: new Date().toISOString()
+      };
+
+      // fire-and-forget: não trava a página se o webhook demorar
+      fetch(N8N_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(function () { /* silencioso */ });
+    } catch (e) { /* silencioso */ }
+  });
+</script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: #000000;
+    font-family: 'Arial Black', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    color: #ffffff;
+  }
+
+  .check {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #1DB954;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+    box-shadow: 0 0 40px rgba(29, 185, 84, 0.45);
+  }
+
+  .check svg { width: 46px; height: 46px; }
+
+  h1 {
+    font-size: clamp(32px, 7vw, 56px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.05;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  h1 .destaque { color: #1DB954; }
+
+  p {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: 700;
+    color: #cfcfcf;
+    max-width: 540px;
+    line-height: 1.5;
+  }
+
+  .marca {
+    margin-top: 48px;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #1DB954;
+  }
+</style>
+</head>
+<body>
+
+  <div class="check">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 12.5L9.5 18L20 6.5" stroke="#000000" stroke-width="3.2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <h1>Recebemos suas<br><span class="destaque">respostas!</span></h1>
+
+  <p>Em breve nossa equipe entra em contato pelo WhatsApp para dar o próximo passo. Fica de olho no seu celular!</p>
+
+  <div class="marca">Gestão Lucrativa</div>
+
+</body>
+</html>
